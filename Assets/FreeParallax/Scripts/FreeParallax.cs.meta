@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 6b364d8d33b03664a9e424c330da18d8
+labels:
+- Parallax
+- Background
+- Layer
+- Perspective
+- Scrolling
+- Foreground
+- Script
+- Effect
+timeCreated: 1450979107
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 100
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
