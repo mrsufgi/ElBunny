@@ -1,0 +1,246 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &162168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400134}
+  - 114: {fileID: 11452176}
+  - 114: {fileID: 11426806}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400134
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 162168}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11426806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 162168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9205b9ce4d1e1774580fc19b4652c209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 184804, guid: bdd5cf0434e729b4fb516de0b1998fbb, type: 2}
+  - {fileID: 177150, guid: 459c5cd02625bc34b8cef630cdc17673, type: 2}
+  - {fileID: 166740, guid: a5302a7b049b330428071d278060f90b, type: 2}
+  - {fileID: 108732, guid: cafb1c0b27af3fd48972882b5f11e847, type: 2}
+  - {fileID: 172352, guid: 9eebdbdaa2527ea4bb2a48ce27d2b12c, type: 2}
+--- !u!114 &11452176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 162168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d2439b4e9b94044b8a0b5109cc13dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - prefab: {fileID: 177150, guid: 459c5cd02625bc34b8cef630cdc17673, type: 2}
+    id: 
+    mode: 0
+    despawnPos: {x: -100, y: -100, z: -100}
+    despawned:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    spawned: []
+    m_Root: {fileID: 0}
+    allowGrowth: 0
+    debugMessages: 1
+    useCustomRoot: 0
+    audioSourceHandling: 0
+    particleSystemHandling: 0
+    size: 100
+    playOnSpawn: 0
+    stopOnDespawn: 0
+    Audio: 0
+    Particles: 0
+    foldout: 1
+  - prefab: {fileID: 184804, guid: bdd5cf0434e729b4fb516de0b1998fbb, type: 2}
+    id: 
+    mode: 0
+    despawnPos: {x: -100, y: -100, z: -100}
+    despawned: []
+    spawned: []
+    m_Root: {fileID: 0}
+    allowGrowth: 0
+    debugMessages: 1
+    useCustomRoot: 0
+    audioSourceHandling: 0
+    particleSystemHandling: 0
+    size: 100
+    playOnSpawn: 0
+    stopOnDespawn: 0
+    Audio: 0
+    Particles: 0
+    foldout: 0
+  - prefab: {fileID: 108732, guid: cafb1c0b27af3fd48972882b5f11e847, type: 2}
+    id: 
+    mode: 0
+    despawnPos: {x: -100, y: -100, z: -100}
+    despawned: []
+    spawned: []
+    m_Root: {fileID: 0}
+    allowGrowth: 0
+    debugMessages: 1
+    useCustomRoot: 0
+    audioSourceHandling: 0
+    particleSystemHandling: 0
+    size: 100
+    playOnSpawn: 0
+    stopOnDespawn: 0
+    Audio: 0
+    Particles: 0
+    foldout: 0
+  - prefab: {fileID: 166740, guid: a5302a7b049b330428071d278060f90b, type: 2}
+    id: 
+    mode: 0
+    despawnPos: {x: -100, y: -100, z: -100}
+    despawned: []
+    spawned: []
+    m_Root: {fileID: 0}
+    allowGrowth: 0
+    debugMessages: 1
+    useCustomRoot: 0
+    audioSourceHandling: 0
+    particleSystemHandling: 0
+    size: 100
+    playOnSpawn: 0
+    stopOnDespawn: 0
+    Audio: 0
+    Particles: 0
+    foldout: 0
+  debugMessages: 0
+  spawnDespawnMessages: 1
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 162168}
+  m_IsPrefabParent: 1

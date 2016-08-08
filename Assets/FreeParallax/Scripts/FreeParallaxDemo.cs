@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class FreeParallaxDemo : MonoBehaviour
@@ -32,13 +33,13 @@ public class FreeParallaxDemo : MonoBehaviour
         //clipContainer[0].SetCurve("", typeof(SpriteRenderer), "m_Color.a", curve);
 
         GameObject obj3 = GameObject.Find("bg_layer4(Clone)");
-        print(obj3.name);
+     /*   //print(obj3.name);
         float period = LeanTween.tau / 10 * 1;
         float red = Mathf.Sin(period + LeanTween.tau * 0f / 3f) * 0.5f + 0.5f;
         float green = Mathf.Sin(period + LeanTween.tau * 1f / 3f) * 0.5f + 0.5f;
         float blue = Mathf.Sin(period + LeanTween.tau * 2f / 3f) * 0.5f + 0.5f;
         Color rainbowColor = new Color(red, green, blue);
-        LeanTween.color(obj3, rainbowColor, 6f);
+        LeanTween.color(obj3, rainbowColor, 6f);*/
        // LeanTween.color(obj, rainbowColor, 6f);
 
     }
@@ -46,13 +47,12 @@ public class FreeParallaxDemo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
         if (parallax != null)
         { 
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 parallax.Speed = 15.0f;
-
-
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -60,7 +60,7 @@ public class FreeParallaxDemo : MonoBehaviour
             }
             else
             {
-                parallax.Speed = 0.0f;
+                //parallax.Speed = 1.0f;
             }
         }
     }
