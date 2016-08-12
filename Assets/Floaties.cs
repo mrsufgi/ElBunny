@@ -20,12 +20,12 @@ public class Floaties : MonoBehaviour {
 
     public float xEnd
     {
-        get { return transform.position.x + (float) m_Tiles.Count / 15; }
+        get { return transform.position.x + size; }
     }
 
-    public int size
+    public float size
     {
-        get { return m_Tiles.Count; }
+        get { return (float) m_Tiles.Count / 20; }
     }
 
     private void buildPillar(int index, float xPosition, int size)
@@ -65,7 +65,7 @@ public class Floaties : MonoBehaviour {
             {
                 buildPillar(2, 0.5f + j, 15);
             }
-            buildPillar(2, size - 0.5f, 15);
+            buildPillar(3, size - 0.5f, 15);
         }
     }
 

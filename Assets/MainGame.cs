@@ -43,13 +43,15 @@ public class MainGame : MonoBehaviour
             {
                 LevelManager.manager.next = false;
                 Bunny.MoveToEndOnFloatie();
-
+                Bunny.angle = Floaties.getPassiveActiveVector();
                 Floaties.Reposition();
             }
         }
     }
     void Start()
     {
+
+        Bunny.angle = Floaties.getPassiveActiveVector();
         /*   width = Screen.width;
 
            DOTween.defaultEaseType = Ease.InOutCubic;

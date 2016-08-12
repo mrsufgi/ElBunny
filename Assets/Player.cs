@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public Animator plusAnimator;
     public Text scoreText, plusText, finalScore, highScore;
     public int score = 0;
+    public float angle;
 
     public bool firstJumpHappened = false;
 
@@ -40,9 +41,9 @@ public class Player : MonoBehaviour
     {
         while (true)
         {
-            jumpForce += 0.5f;
+            jumpForce += 0.25f;
             print("COROUTINE");
-            powerBar.DOFillAmount(jumpForce/15,0.05f);
+            powerBar.DOFillAmount(jumpForce/10,0.025f);
             yield return new WaitForSeconds(0.05f);
         }
     }
@@ -88,9 +89,14 @@ public class Player : MonoBehaviour
      
        
             transform.SetParent(null, true);
-            jumpForce = Mathf.Clamp(jumpForce, 2.5f, 15f);
-            playerRigidbody2D.AddForce(new Vector3(jumpForce / 1.5f, jumpForce, 0));
+            jumpForce = Mathf.Clamp(jumpForce, 2.5f, 10f);
+            jumpForce *= 100;
+            print(jumpForce);
+            print(angle);
 
+
+
+            playerRigidbody2D.AddForce((Vector2.up * 2/3 + Vector2.right * 1/3) * jumpForce, ForceMode2D.Force);
             isJumping = true;
             LevelManager.manager.jumping = true;
             animator.SetBool("isJump", true);
@@ -132,6 +138,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private Collider2D jumpedTileCollider;
+
+    void OnCollisionExit2D(Collision2D coll)
+    {
+        jumpedTileCollider = coll.gameObject.GetComponent<Collider2D>();
+        jumpedTileCollider.isTrigger = true;
+    }
+
     private int point = 1;
     void OnCollisionEnter2D(Collision2D coll)
     {
@@ -143,7 +157,6 @@ public class Player : MonoBehaviour
             m_OnFloatie = transform.parent.GetComponent<Floaties>();
             animator.SetBool("isJump", false);
             LevelManager.manager.jumping = false;
-
 
             int platformCount = point;
 
@@ -182,8 +195,8 @@ public class Player : MonoBehaviour
     {
 
         powerBar.DOFillAmount(0, 2f);
-        
-        transform.DOLocalMoveX(m_OnFloatie.size - 0.5f, 2f).OnPlay(() =>
+        print(m_OnFloatie.size);
+         transform.DOLocalMoveX(m_OnFloatie.size - 0.5f, 2f).OnPlay(() =>
         {
             var anim = GetComponent<Animator>();
             anim.SetBool("isRun", true);
@@ -195,6 +208,8 @@ public class Player : MonoBehaviour
             anim.SetBool("isRun", false);
             plusAnimator.SetBool("Increased", false);
             point = 1;
+            jumpedTileCollider.isTrigger = false;
         });
+       
     }
 }

@@ -27,6 +27,8 @@ public class FloatieManager : MonoBehaviour
         m_PassiveFloatie.transform.name = "Passive";
         m_OffFloatie = Floties[(currentFloatieState + 1) % 3];
         m_OffFloatie.transform.name = "Off";
+
+        OnFloatie = m_PassiveFloatie;
         currentFloatieState++;
     }
 
@@ -63,9 +65,11 @@ public class FloatieManager : MonoBehaviour
         refreshRandom();
     }
 
-       void OnTriggerExit2D(Collider2D other)
-     {
-        
+
+      void OnTriggerExit2D(Collider2D other)
+    {
+
+            print("HHHHIII");
           if (other.gameObject.CompareTag("Edge"))
           {
 
@@ -105,10 +109,20 @@ public class FloatieManager : MonoBehaviour
            }*/
     }
 
+    public Floaties OnFloatie { get; private set; }
+
     public void Reposition()
     {
        Next();
         refreshRandom();
         m_ActiveFloatie.transform.DOMoveX(m_PassiveFloatie.xEnd + xRange, 3f);
+    }
+    
+    public float getPassiveActiveVector()
+    {
+
+        Vector2 diference = m_ActiveFloatie.transform.position - m_PassiveFloatie.transform.position;
+        float sign = (m_ActiveFloatie.transform.position.y < m_PassiveFloatie.transform.position.y) ? -1.0f : 1.0f;
+        return Vector2.Angle(Vector2.right, diference) * sign;
     }
 }
