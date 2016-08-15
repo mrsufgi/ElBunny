@@ -8,14 +8,24 @@ using System;
 public class Floaties : MonoBehaviour {
 
     public List<GameObject> TileComponents;
-    private List<GameObject> m_Tiles;
+    private List<List<GameObject>> m_Tiles;
     //public GameObject Parent;
 
     // Use this for initialization
     void Awake ()
     {
-        m_Tiles = new List<GameObject>();
+        m_Tiles = new List<List<GameObject>>();
         //Spawn();
+    }
+
+    public Vector3 topLeft 
+    {
+        get { return m_Tiles[0][0].transform.position; }
+    }
+
+    public Vector3 topRight
+    {
+        get { return m_Tiles[m_Tiles.Count - 1][0].transform.position; }
     }
 
     public float xEnd
@@ -25,19 +35,19 @@ public class Floaties : MonoBehaviour {
 
     public float size
     {
-        get { return (float) m_Tiles.Count / 20; }
+        get { return (float) m_Tiles.Count; }
     }
 
     private void buildPillar(int index, float xPosition, int size)
     {
         float i = 0;
         GameObject tile;
-
+        var Pilar = new List<GameObject>();
         while (i < size)
         {
             tile = TileComponents[index].Spawn(new Vector2(xPosition, -i), Quaternion.identity);
             tile.transform.SetParent(transform, false);
-            m_Tiles.Add(tile);
+            Pilar.Add(tile);
 
             if (i == 0)
             {
@@ -49,6 +59,7 @@ public class Floaties : MonoBehaviour {
                 i += 0.8f;
             }
         }
+        m_Tiles.Add(Pilar);
     }
 
     public void Spawn(int size)
@@ -71,9 +82,12 @@ public class Floaties : MonoBehaviour {
 
     internal void DespawnFloatie()
     {
-        foreach (GameObject tile in m_Tiles)
+        foreach (List<GameObject> pilar in m_Tiles)
         {
-            tile.Despawn();
+            foreach (GameObject tile in pilar)
+            {
+                tile.Despawn();
+            }
         }
     
         // 

@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         while (true)
         {
             jumpForce += 0.25f;
-            print("COROUTINE");
+           // print("COROUTINE");
             powerBar.DOFillAmount(jumpForce/10,0.025f);
             yield return new WaitForSeconds(0.05f);
         }
@@ -72,8 +72,8 @@ public class Player : MonoBehaviour
 
         recognizer.gestureRecognizedEvent += (r) =>
         {
-            Debug.Log("tap recognizer fired: " + r);
-            print("ChARGING!");
+        //    Debug.Log("tap recognizer fired: " + r);
+         //   print("ChARGING!");
             co = StartCoroutine(MyCoroutine());
 
         };
@@ -85,18 +85,22 @@ public class Player : MonoBehaviour
         recognizer.gestureCompleteEvent += (r) =>
         {
             StopCoroutine(co); // stop the coroutine
-            print("Fly!");
+          //  print("Fly!");
      
        
             transform.SetParent(null, true);
-            jumpForce = Mathf.Clamp(jumpForce, 2.5f, 10f);
-            jumpForce *= 100;
+            jumpForce = Mathf.Clamp(jumpForce, 0f, 10f);
+            jumpForce *= 110;
             print(jumpForce);
             print(angle);
 
+            //angle = Math.Abs(angle);
+            //angle += 45;
 
+            // playerRigidbody2D.AddForce((Vector2.up * 2/3 + Vector2.right * 1/3) * jumpForce, ForceMode2D.Force);
 
-            playerRigidbody2D.AddForce((Vector2.up * 2/3 + Vector2.right * 1/3) * jumpForce, ForceMode2D.Force);
+            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+            playerRigidbody2D.AddForce((dir / 3 + Vector3.up * 2 / 3) * jumpForce, ForceMode2D.Force);
             isJumping = true;
             LevelManager.manager.jumping = true;
             animator.SetBool("isJump", true);

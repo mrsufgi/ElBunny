@@ -16,7 +16,7 @@ public class FloatieManager : MonoBehaviour
     private int currentFloatieState = 0;
     private const float c_OffScreenPositionX = 15f;
     private float width = Screen.width;
-    public GameObject Bunny;
+    public Player Bunny;
 
     void Next()
     {
@@ -115,14 +115,20 @@ public class FloatieManager : MonoBehaviour
     {
        Next();
         refreshRandom();
-        m_ActiveFloatie.transform.DOMoveX(m_PassiveFloatie.xEnd + xRange, 3f);
+        m_ActiveFloatie.transform.DOMoveX(m_PassiveFloatie.xEnd + xRange, 3f).OnComplete(() =>
+        {
+            Bunny.angle = getPassiveActiveVector();
+        });
     }
     
     public float getPassiveActiveVector()
     {
-
-        Vector2 diference = m_ActiveFloatie.transform.position - m_PassiveFloatie.transform.position;
-        float sign = (m_ActiveFloatie.transform.position.y < m_PassiveFloatie.transform.position.y) ? -1.0f : 1.0f;
+        print(m_ActiveFloatie.topLeft);
+        print(m_PassiveFloatie.topRight);
+        Vector2 diference = m_ActiveFloatie.topLeft - m_PassiveFloatie.topRight;
+        print(diference.normalized);
+        float sign = (m_ActiveFloatie.topLeft.y < m_PassiveFloatie.topRight.y) ? -1.0f : 1.0f;
+        print(Vector2.Angle(Vector2.right, diference) * sign);
         return Vector2.Angle(Vector2.right, diference) * sign;
     }
 }
