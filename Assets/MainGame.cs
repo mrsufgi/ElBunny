@@ -1,15 +1,12 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using Assets;
-using DG.Tweening;
-using Random = UnityEngine.Random;
+
 
 public class MainGame : MonoBehaviour
 {
 
-    public List<Floaties> Floties;
+    private List<Floaties> Floties = new List<Floaties>();
 
     private Floaties m_ActiveFloatie;
     private Floaties m_PassiveFloatie;
@@ -19,7 +16,7 @@ public class MainGame : MonoBehaviour
     private float width;
     public Player Bunny;
     public FloatieManager Floaties;
-
+    private bool firstRun = true;
     void Next()
     {
 
@@ -37,6 +34,9 @@ public class MainGame : MonoBehaviour
     void Update()
     {
 
+
+
+
         if (LevelManager.manager.next)
         {
             if (!LevelManager.manager.jumping)
@@ -44,14 +44,25 @@ public class MainGame : MonoBehaviour
                 LevelManager.manager.next = false;
                 Bunny.MoveToEndOnFloatie();
                 Floaties.Reposition();
-            //    Bunny.angle = Floaties.getPassiveActiveVector();
+                //    Bunny.angle = Floaties.getPassiveActiveVector();
             }
         }
     }
+
+    
+
     void Start()
     {
 
+       
+
+
         Bunny.angle = Floaties.getPassiveActiveVector();
+
+
+
+
+
         /*   width = Screen.width;
 
            DOTween.defaultEaseType = Ease.InOutCubic;

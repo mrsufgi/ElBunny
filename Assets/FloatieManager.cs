@@ -69,7 +69,6 @@ public class FloatieManager : MonoBehaviour
       void OnTriggerExit2D(Collider2D other)
     {
 
-            print("HHHHIII");
           if (other.gameObject.CompareTag("Edge"))
           {
 

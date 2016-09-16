@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -19,7 +18,7 @@ public class Player : MonoBehaviour
     private float jumpPower, tempCounter;
     //private bool time, jumpyReady, grounded;
 
-   // private bool cameraFinished = false;
+    // private bool cameraFinished = false;
     //private bool startedRotating = false;
 
     //public GameObject WallOfScore, smallJetStream, largeJetStream, startSmallJetStream;
@@ -30,33 +29,29 @@ public class Player : MonoBehaviour
 
     public Animator plusAnimator;
     public Text scoreText, plusText, finalScore, highScore;
-    public int score = 0;
+    public int score;
     public float angle;
-
-    public bool firstJumpHappened = false;
 
     // Use this for initialization
 
     IEnumerator MyCoroutine()
     {
-        while (true)
+        while (charging)
         {
             jumpForce += 0.25f;
-           // print("COROUTINE");
-            powerBar.DOFillAmount(jumpForce/10,0.025f);
+          //  print("COROUTINE");
+            powerBar.DOFillAmount(jumpForce / 10, 0.025f);
             yield return new WaitForSeconds(0.05f);
         }
     }
 
-    Coroutine co;
-
+    private Coroutine co;
+    private bool charging = false;
     void Start()
     {
 
         powerBar.fillAmount = 0;
-
-        // start the coroutine the usual way but store the Coroutine object that StartCoroutine returns.
-
+        score = 0;
 
 
         isJumping = false;
@@ -64,7 +59,7 @@ public class Player : MonoBehaviour
         playerRigidbody2D.freezeRotation = true;
         animator = GetComponent<Animator>();
 
-         recognizer = new TKLongPressRecognizer
+        recognizer = new TKLongPressRecognizer
         {
             minimumPressDuration = 0.01f,
             allowableMovementCm = 50f
@@ -72,51 +67,56 @@ public class Player : MonoBehaviour
 
         recognizer.gestureRecognizedEvent += (r) =>
         {
-        //    Debug.Log("tap recognizer fired: " + r);
-         //   print("ChARGING!");
-            co = StartCoroutine(MyCoroutine());
-
+            //    Debug.Log("tap recognizer fired: " + r);
+            //   print("ChARGING!");
+            if (LevelManager.manager.playing)
+            {
+                charging = true;
+                co = StartCoroutine(MyCoroutine());
+            }
         };
-
-
-
-
 
         recognizer.gestureCompleteEvent += (r) =>
         {
-            StopCoroutine(co); // stop the coroutine
-          //  print("Fly!");
-     
-       
-            transform.SetParent(null, true);
-            jumpForce = Mathf.Clamp(jumpForce, 0f, 10f);
-            jumpForce *= 110;
-            print(jumpForce);
-            print(angle);
 
-            //angle = Math.Abs(angle);
-            //angle += 45;
+            //  print("Fly!");
 
-            // playerRigidbody2D.AddForce((Vector2.up * 2/3 + Vector2.right * 1/3) * jumpForce, ForceMode2D.Force);
-
-            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
-            playerRigidbody2D.AddForce((dir / 3 + Vector3.up * 2 / 3) * jumpForce, ForceMode2D.Force);
-            isJumping = true;
-            LevelManager.manager.jumping = true;
-            animator.SetBool("isJump", true);
-
-            jumpForce = 0;
-
-            LevelManager.manager.next = true;
-
-            // first jump
-            if (!firstJumpHappened)
+            if (LevelManager.manager.playing)
             {
-                firstJumpHappened = true;
+                charging = false;
+                transform.SetParent(null, true);
+                jumpForce = Mathf.Clamp(jumpForce, 0f, 10f);
+                jumpForce *= 110;
+              //  print(jumpForce);
+              //  print(angle);
+
+                //angle = Math.Abs(angle);
+                //angle += 45;
+
+                // playerRigidbody2D.AddForce((Vector2.up * 2/3 + Vector2.right * 1/3) * jumpForce, ForceMode2D.Force);
+
+                Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+                playerRigidbody2D.AddForce((dir / 3 + Vector3.up * 2 / 3) * jumpForce, ForceMode2D.Force);
+                isJumping = true;
+                LevelManager.manager.jumping = true;
+                animator.SetBool("isJump", true);
+
+                jumpForce = 0;
+
+                LevelManager.manager.next = true;
+
+                // first jump
+                if (!LevelManager.manager.firstJumpHappened)
+                {
+                    LevelManager.manager.firstJumpHappened = true;
+                }
+
+                print("removing");
+                TouchKit.removeGestureRecognizer(recognizer);
+
             }
 
         };
-
 
 
         TouchKit.addGestureRecognizer(recognizer);
@@ -130,14 +130,28 @@ public class Player : MonoBehaviour
 
     }
 
+   public void Reset()
+    {
+        transform.position = new Vector3(jumpedTileCollider.transform.position.x, 15f, 0);
+        score = 0;
+        animator.SetBool("isJump", false);  
+        playerRigidbody2D.WakeUp();
+       isJumping = false;
+       jumpedTileCollider.isTrigger = false;
+        TouchKit.addGestureRecognizer(recognizer);
+        powerBar.DOFillAmount(0, 1f);
+       scoreText.text = score + "";
+    }
+
 
 
     void OnCollisionStay2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Edge") { 
+        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Edge")
+        {
             isJumping = false;
-     
-        
+
+
             // animator.SetBool("isJump", false);
         }
     }
@@ -153,45 +167,50 @@ public class Player : MonoBehaviour
     private int point = 1;
     void OnCollisionEnter2D(Collision2D coll)
     {
-
-        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Edge")
+        if (LevelManager.manager.playing)
         {
-            // isJumping = false;
-            transform.SetParent(coll.gameObject.transform.parent);
-            m_OnFloatie = transform.parent.GetComponent<Floaties>();
-            animator.SetBool("isJump", false);
-            LevelManager.manager.jumping = false;
-
-            int platformCount = point;
-
-            plusAnimator.SetBool("Increased", true);
-
-            switch (platformCount)
+            if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Edge")
             {
-                case 1:
-                    score += 1;
-                    plusText.text = "+1";
-                    break;
-                case 2:
-                    score += 4;
-                    plusText.text = "+4";
-                    break;
-                case 3:
-                    score += 8;
-                    plusText.text = "+8";
-                    break;
-                case 4:
-                    score += 16;
-                    plusText.text = "+16";
-                    break;
+
+                if (jumpedTileCollider != coll.gameObject.GetComponent<Collider2D>())
+                {
+                    // isJumping = false;
+                    transform.SetParent(coll.gameObject.transform.parent);
+                    m_OnFloatie = transform.parent.GetComponent<Floaties>();
+                    animator.SetBool("isJump", false);
+                    LevelManager.manager.jumping = false;
+
+                    int platformCount = point;
+
+                    plusAnimator.SetBool("Increased", true);
+
+                    switch (platformCount)
+                    {
+                        case 1:
+                            score += 1;
+                            plusText.text = "+1";
+                            break;
+                        case 2:
+                            score += 4;
+                            plusText.text = "+4";
+                            break;
+                        case 3:
+                            score += 8;
+                            plusText.text = "+8";
+                            break;
+                        case 4:
+                            score += 16;
+                            plusText.text = "+16";
+                            break;
+                    }
+                    Debug.Log("FU");
+                    plusAnimator.SetBool("Increased", true);
+                    scoreText.text = "" + score;
+                    //finalScore.text = "" + score;
+                    point = 0;
+
+                }
             }
-            Debug.Log("FU");
-            plusAnimator.SetBool("Increased", true);
-            scoreText.text = "" + score;
-            //finalScore.text = "" + score;
-            point = 0;
-
-
         }
     }
 
@@ -199,8 +218,7 @@ public class Player : MonoBehaviour
     {
 
         powerBar.DOFillAmount(0, 2f);
-        print(m_OnFloatie.size);
-         transform.DOLocalMoveX(m_OnFloatie.size - 0.5f, 2f).OnPlay(() =>
+        transform.DOLocalMoveX(m_OnFloatie.size - 0.5f, 2f).OnPlay(() =>
         {
             var anim = GetComponent<Animator>();
             anim.SetBool("isRun", true);
@@ -213,7 +231,8 @@ public class Player : MonoBehaviour
             plusAnimator.SetBool("Increased", false);
             point = 1;
             jumpedTileCollider.isTrigger = false;
+            TouchKit.addGestureRecognizer(recognizer);
         });
-       
+
     }
 }

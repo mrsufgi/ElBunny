@@ -5,7 +5,8 @@ using Assets;
 using QuickPool;
 using System;
 
-public class Floaties : MonoBehaviour {
+public class Floaties : MonoBehaviour
+{
 
     public List<GameObject> TileComponents;
     private List<List<GameObject>> m_Tiles;

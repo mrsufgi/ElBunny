@@ -14,6 +14,12 @@ public class LevelManager : MonoBehaviour
     public float sliderValue = 0.5f;
     public int adsCounter;
     public bool disableMicMenuSlider;
+    public bool firstJumpHappened = false;
+    public Animator animatorCamera, menuAnimator, logoAnimator, scoreAnimator;
+    public bool firstRun;
+    public Canvas menuCanvas, scoreCanvas, logoCanvas, LoseCanvas;
+
+    public bool playing = false;
 
 
     public bool jumping = false;
@@ -24,25 +30,25 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
 
-        highScore = Load();
+         highScore = Load();
 
-        if (!first)
-        {
-            Debug.Log("First Time");
-            first = true;
-            touch = false;
-            sliderValue = 0.5f;
-            Save();
-        }
+         if (!first)
+         {
+             Debug.Log("First Time");
+             first = true;
+             touch = false;
+             sliderValue = 0.5f;
+             Save();
+         }
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         /*
-		if (Advertisement.isSupported) {
-			Advertisement.allowPrecache = true;
-			Advertisement.Initialize("30796", false);
-		}
-		*/
+       if (Advertisement.isSupported) {
+           Advertisement.allowPrecache = true;
+           Advertisement.Initialize("30796", false);
+       }*/
+
 
         if (manager == null)
         {
@@ -56,6 +62,35 @@ public class LevelManager : MonoBehaviour
     }
 
 
+
+    void Update()
+    {
+        if (animatorCamera != null)
+        {
+
+            if (animatorCamera.GetCurrentAnimatorStateInfo(0).IsName("Finished"))
+            {
+                animatorCamera.enabled = false;
+                scoreCanvas.enabled = true;
+                scoreAnimator.enabled = true;
+                manager.playing = true;
+                cameraFinished = true;
+            }
+
+            if (animatorCamera.GetCurrentAnimatorStateInfo(0).IsName("Keep State") && firstRun)
+            {
+                menuAnimator.enabled = true;
+                menuAnimator.SetBool("Fade", true);
+            }
+
+        }
+
+        if (firstJumpHappened)
+        {
+            //GetComponent<AudioSource>().Stop();
+            scoreAnimator.SetBool("FadeOut", true);
+        }
+    }
     void Start()
     {
 
@@ -65,7 +100,34 @@ public class LevelManager : MonoBehaviour
         {
             adsCounter = 10;
         }
+
+        scoreAnimator.enabled = false;
+        // logoAnimator.enabled = true;
+        animatorCamera.enabled = true;
+        scoreCanvas.enabled = false;
+        menuCanvas.enabled = true;
+        menuCanvas.GetComponent<CanvasGroup>().alpha = 0;
+        menuAnimator.enabled = false;
+        firstRun = true;
+        
     }
+
+    public void Play()
+    {
+       // LevelManager.manager.disableMicMenuSlider = true;
+       // micMenu.GetComponent<MicMenu>().enabled = false;
+        menuAnimator.SetBool("Fade", false);
+        animatorCamera.SetBool("Zoom", true);
+        firstRun = false;
+        menuCanvas.enabled = false;
+    }
+
+    public void Retry()
+    {
+       
+    }
+
+
     //Overwrites data, need to fix
     public void Save()
     {
