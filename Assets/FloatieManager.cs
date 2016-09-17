@@ -1,7 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.ComponentModel;
+
 using DG.Tweening;
+
+
 using Random = UnityEngine.Random;
 
 public class FloatieManager : MonoBehaviour
@@ -11,6 +15,7 @@ public class FloatieManager : MonoBehaviour
     private Floaties m_ActiveFloatie;
     private Floaties m_OffFloatie;
 
+    public EmotivManager emotiv;
     public List<Floaties> Floties;
 
     private int currentFloatieState = 0;
@@ -39,7 +44,18 @@ public class FloatieManager : MonoBehaviour
     float yRange;
     float yStandard;
 
- 
+    public GameObject[] background; 
+
+    void Update()
+    {
+        Color rainbowColor = new Color((float) this.emotiv.Fear, (float) this.emotiv.Excitment, (float)this.emotiv.Happy);
+        print(rainbowColor);
+        for (int i = 0; i < background.Length; i++)
+        {
+            this.background[i].GetComponent<SpriteRenderer>().color = rainbowColor;
+        }
+
+    }
     // Use this for initialization
     void Start()
     {

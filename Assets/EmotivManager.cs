@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 using System.Collections;
 using Emotiv;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 
-public struct EmotivChannelFrequenciesPerformance {
-	public EmotivChannelFrequenciesPerformance(EdkDll.IEE_DataChannel_t i_DataChannel) {
-		this.DataChannel = i_DataChannel;
+public class EmotivChannelFrequenciesPerformance {
+	public EmotivChannelFrequenciesPerformance(EdkDll.IEE_DataChannel_t i_Data)
+	{
+	    this.Data = i_Data;
 	}
 
 	public double Theta {
@@ -33,14 +37,28 @@ public struct EmotivChannelFrequenciesPerformance {
 		set;
 	}
 
-	public EdkDll.IEE_DataChannel_t DataChannel {
+	public EdkDll.IEE_DataChannel_t Data {
 		get;
 		private set;
 	}
+
+    public override string ToString()
+    {
+        return string.Format(
+            "Channel: {0}, Alpha: {1}, Low Beta: {2}, High Beta: {3}, Theta: {4}, Gamma: {5}",
+            Data,
+            Alpha,
+            LowBeta,
+            HighBeta,
+            Theta,
+            Gamma);
+    }
 }
 
-public class EmotivManager : MonoBehaviour {
+public class EmotivManager : MonoBehaviour
+{
 
+    public bool debug = true;
     private EmoEngine engine;
 
 	// average freq 
@@ -80,6 +98,7 @@ public class EmotivManager : MonoBehaviour {
 		engine.UserRemoved += new EmoEngine.UserRemovedEventHandler (EmotivUserRemoved); 
         engine.EmoEngineDisconnected += new EmoEngine.EmoEngineDisconnectedEventHandler(EmotivDisconnected);
         engine.EmoEngineEmoStateUpdated += new EmoEngine.EmoEngineEmoStateUpdatedEventHandler(EmotivStateUpdated);
+        createChannelList();
         engine.Connect();
     }
 
@@ -87,6 +106,26 @@ public class EmotivManager : MonoBehaviour {
     void Update () {
         engine.ProcessEvents();
 		updateFreqBands ();
+    }
+
+    private void CalcAvg()
+    {
+        double alpha = 0, low_beta = 0, high_beta = 0, theta = 0, gamma = 0;
+        int size = this.m_DataChannels.Count;
+        foreach (var item in this.m_DataChannels)
+        {
+            alpha += item.Alpha;
+            low_beta += item.LowBeta;
+            high_beta += item.HighBeta;
+            theta += item.Theta;
+            gamma += item.Gamma;
+        }
+
+        this.m_AvgTheta = theta / size;
+        this.m_AvgAlpha = alpha / size;
+        this.m_AvgLowBeta = low_beta / size;
+        this.m_AvgHighBeta = high_beta / size;
+        this.m_AvgGamma = gamma / size;
     }
 
 	/*
@@ -100,24 +139,27 @@ public class EmotivManager : MonoBehaviour {
 			double[] high_beta = new double[1];
 			double[] gamma = new double[1];
 			double[] theta = new double[1];
-
-			double totalAlpha = 0, totalLowBeta = 0, totalHighBeta = 0, totalGamma = 0, totalTheta = 0;
-			int activeChannelCount = m_DataChannels.Count;
 			List<EmotivChannelFrequenciesPerformance> updatedDataChannels = new List<EmotivChannelFrequenciesPerformance> ();
 			foreach (EmotivChannelFrequenciesPerformance channel in m_DataChannels) {
-				activeChannelCount++;
-				engine.IEE_GetAverageBandPowers ((uint)m_UserID, channel.DataChannel, theta, alpha, low_beta, high_beta, gamma);
-				EmotivChannelFrequenciesPerformance updatedChannel = new EmotivChannelFrequenciesPerformance (channel.DataChannel) {
+				engine.IEE_GetAverageBandPowers ((uint)m_UserID, channel.Data, theta, alpha, low_beta, high_beta, gamma);
+				EmotivChannelFrequenciesPerformance updatedChannel = new EmotivChannelFrequenciesPerformance (channel.Data) {
 					Alpha = alpha [0],
 					LowBeta = low_beta [0],
 					HighBeta = high_beta [0],
 					Theta = theta [0],
 					Gamma = gamma [0]
 				};
-			}
+			    updatedDataChannels.Add(updatedChannel);
+			    if (this.debug)
+			    {
+			        Debug.Log(updatedChannel);
+			    }
+            } 
 
 			// Change ref. 
 			m_DataChannels = updatedDataChannels;
+		    CalcAvg();
+
 		}
 	}
 
@@ -161,15 +203,111 @@ public class EmotivManager : MonoBehaviour {
         EmoState es = e.emoState; 
     }
 
-
-    void CaculateScale(double rawScore, double maxScale, double minScale, out double scaledScore)
+    public double AverageAlpha
     {
+        get
+        {
+            return this.m_AvgAlpha;
+        }
+    }
+
+    public double AverageLowBeta        
+    {
+        get
+        {
+            return this.m_AvgLowBeta;
+        }
+    }
+
+    public double AverageHighBeta 
+    {
+        get
+        {
+            return this.m_AvgHighBeta;
+        }
+    }
+
+    public double AverageTheta
+    {
+        get
+        {
+            return this.m_AvgTheta;
+        }
+    }
+
+    public double AverageGamma
+    {
+        get
+        {
+            return this.m_AvgGamma;
+        }
+    }
+
+    /*
+     * The following methods need to be implemented based on the signal processing and ML and
+     * out of scope for this project.
+     */
+
+    // TODO: Change Stub methods to actual implementation 
+    public double Happy
+    {
+        get
+        {
+            return this.CaculateScale(this.m_AvgAlpha / this.m_AvgTheta);
+        }
+    }
+
+
+    public double Fear
+    {
+        get
+        {
+            return this.CaculateScale(this.m_AvgGamma);
+        }
+    }
+
+    // Using specific data channels
+    public double Disgust
+    {
+        get
+        {
+            return this.CaculateScale(this.m_DataChannels[1].Alpha + this.m_DataChannels[2].Alpha);
+        }
+    } 
+
+    public double Excitment
+    {
+        get
+        {
+            return this.CaculateScale(this.m_AvgAlpha / this.AverageHighBeta);
+        }
+    }
+
+    public double Natural
+    {
+        get
+        {
+            return this.CaculateScale(this.m_AvgGamma);
+        }
+    }
+
+    // return a number between 0 and 1 based on raw score. 
+    // TODO get real min and max scale and not arbitrary numbers.
+    double CaculateScale(double rawScore)
+    {
+        double maxScale = 1000;
+        double minScale = 0;
+        double scaledScore;
+
         if (rawScore < minScale)
             scaledScore = 0;
         else if (rawScore > maxScale)
             scaledScore = 1;
         else
             scaledScore = (rawScore - minScale) / (maxScale - minScale);
+
+        return scaledScore;
     }
+
 
 }
