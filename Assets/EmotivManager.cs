@@ -253,7 +253,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_AvgAlpha / this.m_AvgTheta);
+            return this.CaculateScale(this.m_AvgAlpha);
         }
     }
 
@@ -262,7 +262,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_AvgGamma);
+            return this.CaculateScale(this.m_AvgGamma );
         }
     }
 
@@ -271,7 +271,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_DataChannels[1].Alpha + this.m_DataChannels[2].Alpha);
+            return this.CaculateScale(this.m_AvgLowBeta);
         }
     } 
 
@@ -279,7 +279,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_AvgAlpha / this.AverageHighBeta);
+            return this.CaculateScale(this.m_AvgHighBeta);
         }
     }
 
@@ -287,7 +287,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_AvgGamma);
+            return this.CaculateScale(this.m_AvgTheta);
         }
     }
 
