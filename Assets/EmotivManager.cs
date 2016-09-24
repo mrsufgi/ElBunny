@@ -59,6 +59,7 @@ public class EmotivManager : MonoBehaviour
 {
 
     public bool debug = true;
+	public bool useStub = true;
     private EmoEngine engine;
 
 	// average freq 
@@ -128,38 +129,51 @@ public class EmotivManager : MonoBehaviour
         this.m_AvgGamma = gamma / size;
     }
 
+	private void stubAvgValues() {
+		this.m_AvgTheta = UnityEngine.Random.Range(0,300f);
+		this.m_AvgAlpha = UnityEngine.Random.Range(0,300f);
+		this.m_AvgLowBeta = UnityEngine.Random.Range(0,300f);
+		this.m_AvgHighBeta = UnityEngine.Random.Range(0,300f);
+		this.m_AvgGamma = UnityEngine.Random.Range(0,300f);
+
+		print (m_AvgGamma);
+	}
+
 	/*
 	 * This method calculate the average power for theta, alpha, low_beta, 
 	 * high_beta, gamma input from all channels.
 	*/
 	private void updateFreqBands() {
-		if (m_UserID >= 0) {
-			double[] alpha = new double[1];
-			double[] low_beta = new double[1];
-			double[] high_beta = new double[1];
-			double[] gamma = new double[1];
-			double[] theta = new double[1];
-			List<EmotivChannelFrequenciesPerformance> updatedDataChannels = new List<EmotivChannelFrequenciesPerformance> ();
-			foreach (EmotivChannelFrequenciesPerformance channel in m_DataChannels) {
-				engine.IEE_GetAverageBandPowers ((uint)m_UserID, channel.Data, theta, alpha, low_beta, high_beta, gamma);
-				EmotivChannelFrequenciesPerformance updatedChannel = new EmotivChannelFrequenciesPerformance (channel.Data) {
-					Alpha = alpha [0],
-					LowBeta = low_beta [0],
-					HighBeta = high_beta [0],
-					Theta = theta [0],
-					Gamma = gamma [0]
-				};
-			    updatedDataChannels.Add(updatedChannel);
-			    if (this.debug)
-			    {
-			        Debug.Log(updatedChannel);
-			    }
-            } 
+		if (useStub) { 
+			stubAvgValues ();
+		} else {
+			if (m_UserID >= 0) {
+				double[] alpha = new double[1];
+				double[] low_beta = new double[1];
+				double[] high_beta = new double[1];
+				double[] gamma = new double[1];
+				double[] theta = new double[1];
+				List<EmotivChannelFrequenciesPerformance> updatedDataChannels = new List<EmotivChannelFrequenciesPerformance> ();
+				foreach (EmotivChannelFrequenciesPerformance channel in m_DataChannels) {
+					engine.IEE_GetAverageBandPowers ((uint)m_UserID, channel.Data, theta, alpha, low_beta, high_beta, gamma);
+					EmotivChannelFrequenciesPerformance updatedChannel = new EmotivChannelFrequenciesPerformance (channel.Data) {
+						Alpha = alpha [0],
+						LowBeta = low_beta [0],
+						HighBeta = high_beta [0],
+						Theta = theta [0],
+						Gamma = gamma [0]
+					};
+					updatedDataChannels.Add (updatedChannel);
+					if (this.debug) {
+						Debug.Log (updatedChannel);
+					}
+				} 
 
-			// Change ref. 
-			m_DataChannels = updatedDataChannels;
-		    CalcAvg();
+				// Change ref. 
+				m_DataChannels = updatedDataChannels;
+				CalcAvg ();
 
+			}
 		}
 	}
 
@@ -262,7 +276,7 @@ public class EmotivManager : MonoBehaviour
     {
         get
         {
-            return this.CaculateScale(this.m_AvgGamma );
+            return this.CaculateScale(this.m_AvgGamma);
         }
     }
 
