@@ -54,6 +54,11 @@ public class Floaties : MonoBehaviour
             {
                 i += 0.4f;
                 index = 4;
+                var col = tile.GetComponent<Collider2D>();
+                if (col != null)
+                {
+                    col.isTrigger = false;
+                }
             }
             else
             {

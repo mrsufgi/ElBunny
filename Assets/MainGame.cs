@@ -44,7 +44,7 @@ public class MainGame : MonoBehaviour
                 LevelManager.manager.next = false;
                 Bunny.MoveToEndOnFloatie();
                 Floaties.Reposition();
-                //    Bunny.angle = Floaties.getPassiveActiveVector();
+                //    Bunny.angle = Floaties.GetPassiveActiveVector();
             }
         }
     }
@@ -53,14 +53,7 @@ public class MainGame : MonoBehaviour
 
     void Start()
     {
-
-       
-
-
-        Bunny.angle = Floaties.getPassiveActiveVector();
-
-
-
+        Bunny.angle = Floaties.GetPassiveActiveVector();
 
 
         /*   width = Screen.width;

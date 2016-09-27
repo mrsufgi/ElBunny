@@ -130,11 +130,11 @@ public class EmotivManager : MonoBehaviour
     }
 
 	private void stubAvgValues() {
-		this.m_AvgTheta = UnityEngine.Random.Range(0,300f);
-		this.m_AvgAlpha = UnityEngine.Random.Range(0,300f);
-		this.m_AvgLowBeta = UnityEngine.Random.Range(0,300f);
-		this.m_AvgHighBeta = UnityEngine.Random.Range(0,300f);
-		this.m_AvgGamma = UnityEngine.Random.Range(0,300f);
+		this.m_AvgTheta = UnityEngine.Random.Range(0,1000f);
+		this.m_AvgAlpha = UnityEngine.Random.Range(0,1000f);
+		this.m_AvgLowBeta = UnityEngine.Random.Range(0,1000f);
+		this.m_AvgHighBeta = UnityEngine.Random.Range(0,1000f);
+		this.m_AvgGamma = UnityEngine.Random.Range(0,1000f);
 
 		print (m_AvgGamma);
 	}

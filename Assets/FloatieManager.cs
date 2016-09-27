@@ -48,12 +48,7 @@ public class FloatieManager : MonoBehaviour
 
     void Update()
     {
-        Color rainbowColor = new Color((float) this.emotiv.Fear, (float) this.emotiv.Excitment, (float)this.emotiv.Happy);
-        print(rainbowColor);
-        for (int i = 0; i < background.Length; i++)
-        {
-            this.background[i].GetComponent<SpriteRenderer>().color = rainbowColor;
-        }
+     
 
     }
     // Use this for initialization
@@ -104,12 +99,12 @@ public class FloatieManager : MonoBehaviour
 
       //   var cam = Camera.main.ScreenToWorldPoint(new Vector3(width, 0, 10));
       //  print(cam);
-          size = Random.Range(1, 7);
-          xRange = Random.Range(1f, 9);
-          yRange = Random.Range(-3f, 3f);
+          size = findInteger(1, 0, 7, 1, this.emotiv.Fear);
+        xRange = findInteger(1, 0, 9, 1, this.emotiv.Excitment);
+        yRange = findInteger(1, 0, -3, 3, this.emotiv.Excitment);
 
 
-        
+
         /*   if (xRange < 2.5f)
            {
                yRange = Random.Range(0, 0.3f);
@@ -128,15 +123,24 @@ public class FloatieManager : MonoBehaviour
 
     public void Reposition()
     {
-       Next();
+        Color rainbowColor = new Color((float)this.emotiv.Fear, (float)this.emotiv.Excitment, (float)this.emotiv.Happy, 0.5f);
+        background = GameObject.FindGameObjectsWithTag("Background");
+        print(rainbowColor);
+        for (int i = 0; i < background.Length; i++)
+        {
+            this.background[i].GetComponent<SpriteRenderer>().DOColor(rainbowColor, 3f);
+        }
+
+        Next();
+
         refreshRandom();
         m_ActiveFloatie.transform.DOMoveX(m_PassiveFloatie.xEnd + xRange, 3f).OnComplete(() =>
         {
-            Bunny.angle = getPassiveActiveVector();
+            Bunny.angle = GetPassiveActiveVector();
         });
     }
     
-    public float getPassiveActiveVector()
+    public float GetPassiveActiveVector()
     {
         print(m_ActiveFloatie.topLeft);
         print(m_PassiveFloatie.topRight);
@@ -145,5 +149,14 @@ public class FloatieManager : MonoBehaviour
         float sign = (m_ActiveFloatie.topLeft.y < m_PassiveFloatie.topRight.y) ? -1.0f : 1.0f;
         print(Vector2.Angle(Vector2.right, diference) * sign);
         return Vector2.Angle(Vector2.right, diference) * sign;
+    }
+
+    private int findInteger(double OldMax, double OldMin, double NewMax, double NewMin, double OldValue)
+    {
+        var OldRange = (OldMax - OldMin);
+        var NewRange = (NewMax - NewMin);
+        var NewValue = (((OldValue - OldMin)*NewRange)/OldRange) + NewMin;
+        return (int) Math.Round(NewValue);
+
     }
 }
